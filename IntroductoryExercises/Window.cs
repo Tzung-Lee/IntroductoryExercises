@@ -1,3 +1,4 @@
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Serialization;
@@ -178,11 +179,11 @@ namespace IntroductoryExercises
         private void btnReadXml_Click(object sender, EventArgs e)
         {
             string filePath = "Person.xml";
-            Person p =new Person();
-            using (FileStream fileStream =new FileStream(filePath, FileMode.Open))
+            Person p = new Person();
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
             {
-                XmlSerializer serializer=new XmlSerializer(typeof(Person));
-                 p = serializer.Deserialize(fileStream) as Person;
+                XmlSerializer serializer = new XmlSerializer(typeof(Person));
+                p = serializer.Deserialize(fileStream) as Person;
             }
             SetPersonInfos(p);
         }
@@ -197,30 +198,40 @@ namespace IntroductoryExercises
             Person person = GetPersonInfos();
             string strJson = JsonSerializer.Serialize(person);
             string filePath = "Person.json";
-            using(FileStream fileStream =new FileStream(filePath, FileMode.Create))
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
             {
-                using(StreamWriter streamWriter = new StreamWriter(fileStream, Encoding.Default))
+                using (StreamWriter streamWriter = new StreamWriter(fileStream, Encoding.Default))
                 {
                     streamWriter.WriteLine(strJson);
                 }
             }
         }
 
+        /// <summary>
+        /// ∂¡»°Json
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnReadJson_Click(object sender, EventArgs e)
         {
             Person p;
             string filePath = "Person.json";
-            using( FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
             {
-                using(StreamReader streamReader = new StreamReader(fileStream,Encoding.Default))
+                using (StreamReader streamReader = new StreamReader(fileStream, Encoding.Default))
                 {
                     string Json = streamReader.ReadToEnd();
-                    p =JsonSerializer.Deserialize<Person>(Json);
+                    p = JsonSerializer.Deserialize<Person>(Json);
                 }
             }
             SetPersonInfos(p);
         }
 
+        /// <summary>
+        /// «Âø’
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtName.Clear();
@@ -234,14 +245,33 @@ namespace IntroductoryExercises
             }
         }
 
+        /// <summary>
+        /// ±£¥ÊBin
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSaveBin_Click(object sender, EventArgs e)
         {
-
+            Person person = GetPersonInfos();
+            string filePath = "objPerson.bin";
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                binaryFormatter.Serialize(fs, person);
+            }
         }
 
         private void btnReadBin_Click(object sender, EventArgs e)
         {
+            string filePath = "objPerson.bin";
+            Person person = new Person();
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                person = binaryFormatter.Deserialize(fs) as Person;
 
+            }
+            SetPersonInfos(person);
         }
 
     }
